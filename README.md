@@ -27,6 +27,8 @@ Configuring your donation is simple as well. Open up the config.json file to see
 ```
 
 ### Requirements
+* Webserver
+* Browser with JavaScript
 
 Using Canvas
 * Firefox 31+

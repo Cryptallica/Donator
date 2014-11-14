@@ -8,15 +8,23 @@ Using is very simple. Include donator.js and then specifiy by id the html object
 <div id="donator-example"></div>
 
 <script>
-var donatorEx = new CryptDonator("donator-example");
+//Arg1 id of object or html object itself, Arg2 customizeables
+var donatorEx = new CryptDonator("donator-example", {
+    //Set src of config json, will default to ./config.json
+    src: "",
+    
+    //Set theme [default, darkthrone, mayhem]
+    theme: "mayhem"
+});
 </script>
 ```
 
-Configuring your donation is simple as well. Open up the config.json file to see how coins are organized. With valid json create objects for each coin with an address attribute. Without the address the coin will not be considered valid. Additionally you can specifiy a label. 
+Configuring your donator is simple as well. Open up the config.json file to see how coins are organized. With valid json create objects for each coin with an address attribute. Without the address the coin will not be considered valid. Additionally you can specifiy a label. You can optionally create the config file and set it by src from CryptDonator function.
 ```json
 {
   "bitcoin": {
     "address": "1Hyhm23xzUeRKjGCQMxBjmQMXGmtWPcnko",
+    "src": "bitcoinqr.png",
     "label": "Bitcoins to cryptallica"
   },
 
@@ -25,6 +33,7 @@ Configuring your donation is simple as well. Open up the config.json file to see
   }
 }
 ```
+Address is your coin address. src is the src to your qr image. Without this it will create by canvas or if no canvas support do nothing. Label is an optional label for the transaction.
 
 ### Requirements
 * Webserver
@@ -36,10 +45,3 @@ Using Canvas
 * Chrome 31+
 * Safari 5.1+
 * Opera 24+
-
-Image Fallback
-* Firefox 20+
-* IE 7+
-* Chrome 10+
-* Safari 5+
-* Opera 10+

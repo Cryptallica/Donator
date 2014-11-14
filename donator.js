@@ -1,6 +1,7 @@
 /**************Crypt-donate main**************/
+var CryptDonator_THEMES = [];
 function CryptDonator(idOrObject, customize) {
-	//Check find or create window
+	//Check id or create window from html object
 	this.window;
 	if(typeof(idOrObject) === "string") {
 		this.window = document.getElementById(idOrObject);
@@ -11,7 +12,7 @@ function CryptDonator(idOrObject, customize) {
 		return false;
 	}
 	
-	if(!this.window) {
+	if(!this.window.appendChild) {
 		console.log("Failed to find id or use object");
 		return false;
 	}
@@ -20,21 +21,34 @@ function CryptDonator(idOrObject, customize) {
 	this.currentCoin = false;
 	this.viewport = false;
 	
+	//UI Customizables
+	this.customize = customize || {};
+	this.theme = this.customize.theme || "default";
+	
 	this.init();
 }
 
+//prototype loads up everything from init
 CryptDonator.prototype = {
+    
+    //Initialize, will setup libs and files and get config on window load
 	init: function() {
 		var crypt = this;
 		this.getLocation();
 		this.loadStylesheet();
 		this.loadLibs();
 		this.loadHTML();
-		addEvent("load", window, function(){crypt.loadConfig();});	
+		addEvent("load", window, function(){
+	       crypt.loadConfig();
+		   crypt.setupCopier();
+	    });	
+	    
 		addEvent("resize", window, function(){crypt.changeSize();});
 		crypt.changeSize();
+		
 	},
 	
+	//Gets this files script location
 	getLocation: function() {
 		//Script location
 		var scripts = document.getElementsByTagName("script");
@@ -47,39 +61,53 @@ CryptDonator.prototype = {
 		if(!this.serverLocation) {console.log("Script location not found");}
 	},
 	
+	//Loads theme stylesheet if not already loaded
 	loadStylesheet: function() {
-		var stylesheet = document.createElement("link");
-		stylesheet.rel = "stylesheet";
-		stylesheet.href = this.serverLocation + "_css/crypt-donate.css";
-		document.head.appendChild(stylesheet);	
+	    if(!in_array(this.theme, CryptDonator_THEMES)) {
+    		var stylesheet = document.createElement("link");
+    		stylesheet.rel = "stylesheet";
+    		stylesheet.href = this.serverLocation + "_css/" + this.theme + ".css";
+    		document.head.appendChild(stylesheet);
+    		CryptDonator_THEMES.push(this.theme);
+		}
 	},
 	
+	//Loads vanillaQR and ZeroClipboard
 	loadLibs: function() {
-		var script = document.createElement("script");
-		script.src = this.serverLocation + "lib/vanillaqr.js";
-		document.head.appendChild(script);	
+		var vanillalib = document.createElement("script");
+		vanillalib.src = this.serverLocation + "lib/vanillaqr.js";
+		
+		var zerolib = document.createElement("script");
+        zerolib.src = this.serverLocation + "lib/zeroclipboard/ZeroClipboard.min.js";
+		
+		document.head.appendChild(vanillalib);
+		document.head.appendChild(zerolib);	
 	},
 	
 	loadHTML: function() {
 		var doc = document;
 		var crypt = this;
+		var t = "-"+this.theme;
 		
 		//create wrapper
 		crypt.wrapper = doc.createElement("div");	
-		crypt.wrapper.className = "cryptdonate-wrapper";
+		crypt.wrapper.className = "cryptdonate-wrapper" + t;
 		
 		//Create coin navigator
 		crypt.nav = doc.createElement("div");
-		crypt.nav.className = "cryptdonate-nav";
+		crypt.nav.className = "cryptdonate-nav" + t;
 		//Create header
 		crypt.header = doc.createElement("h2");
-		crypt.header.className = "cryptdonate-header";
+		crypt.header.className = "cryptdonate-header" + t;
 		crypt.header.innerHTML = "Donate";
 		crypt.headerCoin = doc.createElement("span");
-		crypt.headerCoin.className = "cryptdonate-headercoin";
+		crypt.headerCoin.className = "cryptdonate-headercoin" + t;
+		//Create mobile menu icon
+		crypt.mobileMenu = doc.createElement("a");
+		crypt.mobileMenu.className = "cryptmobilemenu" + t;
 		//Create icons div
 		crypt.iconsWrap = doc.createElement("span");
-		crypt.iconsWrap.className = "cryptdonate-iconswrap";
+		crypt.iconsWrap.className = "cryptdonate-iconswrap" + t;
 		addEvent("click", crypt.iconsWrap, function(e) {
 			crypt.changeQr(e);
 		});
@@ -87,19 +115,29 @@ CryptDonator.prototype = {
 		crypt.header.appendChild(crypt.headerCoin);
 		crypt.nav.appendChild(crypt.header);
 		crypt.nav.appendChild(crypt.iconsWrap);
+		crypt.nav.appendChild(crypt.mobileMenu);
+		
 		
 		//Create QR show
 		crypt.qrArea = doc.createElement("div");
-		crypt.qrArea.className = "cryptdonate-qrArea";
+		crypt.qrArea.className = "cryptdonate-qrArea" + t;
 		//Create canvas
 		crypt.qrCanvas = doc.createElement("div");
-		crypt.qrCanvas.className = "cryptdonate-qrCanvas";
+		crypt.qrCanvas.className = "cryptdonate-qrCanvas" + t;
 		//Create address
 		crypt.qrAddress = doc.createElement("a");
-		crypt.qrAddress.className = "cryptdonate-address";
+		crypt.qrAddress.className = "cryptdonate-address" + t;
+		//Create qr copy + message
+		crypt.qrCopy = doc.createElement("a");
+		crypt.qrCopy.className = "cryptdonate-copy" + t;
+		crypt.qrCopyMessage = doc.createElement("p");
+		crypt.qrCopyMessage.className = "cryptdonate-copymessage" + t;
+		
 		//AppendQrData
 		crypt.qrArea.appendChild(crypt.qrCanvas);
 		crypt.qrArea.appendChild(crypt.qrAddress);
+		crypt.qrArea.appendChild(crypt.qrCopy);
+		crypt.qrArea.appendChild(crypt.qrCopyMessage);
 		
 		//Append All Data to wrapper
 		crypt.wrapper.appendChild(crypt.nav);
@@ -109,10 +147,12 @@ CryptDonator.prototype = {
 		crypt.window.appendChild(crypt.wrapper);
 	},
 	
+	//Grabs config from either customize.src or ./config.json
 	loadConfig: function() {
 		var crypt = this;
 		crypt.coin = [];
 		
+		//Extract data from config
 		function extractConfig() {
 		    for(var coin in crypt.config) {
                 var coinArray = crypt.config[coin];
@@ -122,16 +162,17 @@ CryptDonator.prototype = {
             
             if(crypt.coin.length === 0) {return false;}
             crypt.loadCoins();
-            DONATOR_CONFIG = crypt.config;
 		}
 
 		//get config.json found in this file root
-		ajaxJson(crypt.serverLocation + "config.json", function(responseText) {
+		var configUrl = crypt.customize.src || crypt.serverLocation + "config.json";
+		ajaxJson(configUrl, function(responseText) {
 			crypt.config = JSON.parse(responseText);
 			extractConfig();
 		}); 
 	},
 	
+	//Bulk work, will load each coin based on src in config or create via vanillaQR
 	loadCoins: function() {
 		var doc = document;
 		var crypt = this;
@@ -144,7 +185,7 @@ CryptDonator.prototype = {
 			//Create Icons
 			var coinDiv = coin["coinDiv"] = doc.createElement("a");	
 			coinDiv.setAttribute("data", coin["coinname"]);
-			coinDiv.className = "cryptdonate-coindiv";
+			coinDiv.className = "cryptdonate-coindiv"  + "-" + crypt.theme;
 			
 			//Create icon Img
 			var coinImage = doc.createElement("img");
@@ -166,16 +207,33 @@ CryptDonator.prototype = {
 				classOff: "sizeDown"
 			});
 			
-			//Create QR
+			//Create QR url
 			coin["address"] = coin["address"] || "";
 			var qrUrl = coin["coinname"] + ":" + coin["address"];
-			this.qrData = new VanillaQR(coin["qrElement"], qrUrl, {png: true});
-			this.qrCanvas.appendChild(this.qrData.qrd);
+			if(coin["label"]) {
+			    qrUrl+="?label="+ encodeURIComponent(coin["label"]);
+		    }
+
+			//Check if has image SRC 
+			if(coin["src"]) {
+			    var qrimage = new Image();
+			    qrimage.src = coin["src"];
+			    coin["qrElement"].appendChild(qrimage);
+			    var qrData = coin["qrElement"];
+			} 
+			//Create thru canvas if no src set
+			else {
+		        var qrData = new VanillaQR(coin["qrElement"], qrUrl, {png: true});
+			}
+			
+			//Append to qr viewer
+			this.qrCanvas.appendChild(coin["qrElement"]); 
 		}
 		
 		crypt.changeQr(crypt.coin[0]["coinname"]);
 	},
 	
+	//Change qr called on iconswrap element
 	changeQr: function(e) {
 		//Get string or coinname
 		var crypt = this;
@@ -195,7 +253,7 @@ CryptDonator.prototype = {
 			if(crypt.currentCoin["coinname"] === coinName) {return;}
 			//Hide Old Qr
 			setTimeout(function() {
-				crypt.currentCoin["coinDiv"].className = "cryptdonate-coindiv";
+				crypt.currentCoin["coinDiv"].className = "cryptdonate-coindiv" + "-" + crypt.theme;
 				crypt.currentCoin["qrAni"].hide();
 			}, 50);
 		}		
@@ -203,6 +261,7 @@ CryptDonator.prototype = {
 		var coin = this.config[coinName];
 		this.qrAddress.innerHTML = coin["address"];
 		this.qrAddress.href = coin["coinname"] + ":" + coin["address"];
+		this.qrCopy.setAttribute("data-clipboard-text", coin["address"]);
 		
 		setTimeout(function() {
 			coin["qrAni"].show();
@@ -212,24 +271,42 @@ CryptDonator.prototype = {
 		}, 500);	
 	},
 	
+	//Copy qr address to clipboard using ZeroClipboard
+	setupCopier: function() {
+	    var crypt = this;
+	    crypt.zeroClipboard = new ZeroClipboard(crypt.qrCopy);
+	    console.log(crypt.qrCopy);
+	    crypt.zeroClipboard.on("ready", function(readyEvent) {
+	        crypt.zeroClipboard.on("aftercopy", function(event) {
+	            crypt.qrCopyMessage.innerHTML = "Copied " + crypt.currentCoin["coinname"] + " address to clipboard";
+	            setTimeout(function() {
+	                crypt.qrCopyMessage.innerHTML = "";
+	            }, 2000);
+	        });
+	    });
+	},
+	
+	//Change size on window resize < 570 >
 	changeSize: function() {
 		var crypt = this;
 		var wz = window.innerWidth;
+		var t = "-" + crypt.theme;
 		//Mobile layout
 		if(wz < 570 && crypt.viewport !== "mobile") {
-			crypt.wrapper.className = "cryptdonate-wrapper cryptmobile";
+			crypt.wrapper.className = "cryptdonate-wrapper" + t + " cryptmobile" + t;
 			crypt.viewport = "mobile";
 			crypt.touchShow();
 		} 
 		//Desktop layout
 		else if(wz > 570 && this.viewport !== "desktop") {
-			crypt.wrapper.className = "cryptdonate-wrapper cryptdesktop";
+			crypt.wrapper.className = "cryptdonate-wrapper" + t + " cryptdesktop" + t;
 			crypt.viewport = "desktop";
 			crypt.header.onclick = null;
 			crypt.nav.style.height = null;
 		}
 	},
 	
+	//Touch show added on mobile element because of lack of hover
 	touchShow: function() {
 		var crypt = this;
 		crypt.nav.style.height = "1.5em";
@@ -247,10 +324,21 @@ CryptDonator.prototype = {
 /**************Utils**************/
 function trim(text) {return text.replace(/^\s+|\s+$/g, '');}
 
+function in_array(needle, haystack, argStrict) {
+    var key = '',
+    strict = !! argStrict;
+    if (strict) {
+        for(key in haystack) {if (haystack[key] === needle) {return true;}}
+    } else {
+        for(key in haystack) {if (haystack[key] == needle) {return true;}}
+    }
+    return false;
+}
+
 function ajaxJson(page, callback) {
 	page = page || "";
 	
-	var request = new XMLHttpRequest();
+	var request = new Xhr();
 	request.open("GET", page, true);	
 	request.setRequestHeader("Content-Type", "application/json");
 	//request.responseType = "text";
@@ -261,6 +349,10 @@ function ajaxJson(page, callback) {
 		}
 	};
 	request.send(null);
+}
+
+function Xhr(){
+    try{return new XMLHttpRequest();}catch(e){}try{return new ActiveXObject("Msxml3.XMLHTTP");}catch(e){}try{return new ActiveXObject("Msxml2.XMLHTTP.6.0");}catch(e){}try{return new ActiveXObject("Msxml2.XMLHTTP.3.0");}catch(e){}try{return new ActiveXObject("Msxml2.XMLHTTP");}catch(e){}try{return new ActiveXObject("Microsoft.XMLHTTP");}catch(e){}return null;
 }
 
 function addEvent(evnt, elem, func, bubble) {

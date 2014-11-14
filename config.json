@@ -1,12 +1,12 @@
 {
 	"bitcoin": {
 		"address": "1Hyhm23xzUeRKjGCQMxBjmQMXGmtWPcnko",
-		"label": "Bitcoin to Chuck"
+		"src": "bitcoin.png"
 	},
 
 	"litecoin": {
-		"address": "LgwdgsLa1dXaoHcPc6uSy4LFmjurBu8yyV"
-		
+		"address": "LgwdgsLa1dXaoHcPc6uSy4LFmjurBu8yyV",
+		"label": "Litecoin to Chuck"
 	},
 
 	"cannabiscoin": {
@@ -48,5 +48,39 @@
 	
 	"stellar": {
 		"address": "g4VSoWb56FUDbvsaQvEPjKY1Xj2AeeTK2U"	
+	},
+	
+	"blackcoin": {
+	   "address": "BHVASGroD5eKishe82ZynR3PYFT7wBvov8"
+	},
+	
+	"anoncoin" : {
+	   "address": "APPabzeunF1BA9CCt8Ype6Yh3AhV3Krmef"
+	},
+	
+	"mooncoin" : {
+	   "address": "2MPiuP39ssKW4rDBWLgunHLkKxbMe5XK8P"
+	},
+	
+	"terracoin" : {
+	   "address": "1NsMrMFsja7yF8Rjm1yisbuPXX4oUmK9zd",
+	   "label": "MrFriggle"
+	},
+	
+	"mintcoin" : {
+	   "address": "MY8ME1N4sHdXKvQwQm9HUJEY3xXQo4LvrC"
+	},
+	
+	"nxt": {
+	   "address": "NXT-5TGU-S6Y4-X2B3-3QWZQ",
+	   "label": "nxtcommunity.org"
+	},
+	
+	"primecoin" : {
+	   "address": "ARYBrd7k9Tu4oTMYuQ8Vrg875mxECfHVXG"
+	},
+	
+	"flappycoin" : {
+	   "address": "asdf"
 	}
 }

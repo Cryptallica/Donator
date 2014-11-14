@@ -1,5 +1,5 @@
 /****************************Global Crypt Donate****************************/
-.cryptdonate-wrapper {
+.cryptdonate-wrapper-default {
 	display: block;
 	font-size: 16px;
 	position: relative;
@@ -8,27 +8,20 @@
 	box-shadow: 0 0 0 1px rgb(0,0,0);
 	border-radius: 10px;
 	max-width: 40em;
+	width: auto;
 	height: 18em;
 	padding-left: 15em;
 	font-family: helvetica;
 	font-weight: 100;
 }
 
-.cryptmobile {
+.cryptmobile-default {
 	padding-left: 0;
-}
-
-.sizeUp {
-	-webkit-transform: scale(1);
-}
-
-.sizeDown {
-	-webkit-transform: scale(.7);
 }
 
 
 /****************************Main Nav****************************/
-.cryptdonate-header {
+.cryptdonate-header-default {
 	font-size: 1.2em;
 	font-weight: 100;
 	background: rgb(255,255,255);
@@ -44,11 +37,11 @@
 	z-index: 2;
 }
 
-.cryptdonate-headercoin {
+.cryptdonate-headercoin-default {
 	color: rgb(130,130,130);
 }
 
-.cryptdonate-nav {
+.cryptdonate-nav-default {
 	position: absolute;
 	z-index: 6;
 	left: 0;
@@ -72,20 +65,20 @@
 	);
 }
 
-.cryptdonate-iconswrap {
+.cryptdonate-iconswrap-default {
 	padding: 2.5em 5px 0 5px;
 	position: absolute;
 	height: 15.5em;
 	overflow-y: auto;
 }
 
-.cryptdonate-iconswrap .selected {
+.cryptdonate-iconswrap-default .selected {
 	background: rgb(0,0,0) !important;
 	color: rgb(255,255,255);
 	border-radius: 15px;
 }
 
-.cryptdonate-coindiv {
+.cryptdonate-coindiv-default {
 	width: 33.3%;
 	padding: 5px 0;
 	display: inline-block;
@@ -98,52 +91,52 @@
 	transition: all .2s ease-out;
 }
 
-.cryptdonate-coindiv:last-of-type {
+.cryptdonate-coindiv-default:last-of-type {
 	margin-bottom: 5px;
 }
 
-.cryptdonate-coindiv:hover {
+.cryptdonate-coindiv-default:hover {
 	background: rgb(100,130,255);
 	border-radius: 15px;
 	top: 3px;
 	color: rgb(255,255,255);
 }
 
-.cryptdonate-coindiv > img {
+.cryptdonate-coindiv-default > img {
 	width: 80%;
 	display: block;
 	margin: 0 auto;
 }
 
-.cryptdonate-coindiv > h3 {
+.cryptdonate-coindiv-default > h3 {
 	font-size: 10px;
 	text-align: center;
 }
 
 /*Mobile Specify*/
-.cryptmobile .cryptdonate-header {
+.cryptmobile-default .cryptdonate-header-default {
 	border-radius: 9px 9px 0 0;
 	border-right: 1px solid rgb(0,0,0);
 }
 
-.cryptmobile .cryptdonate-nav {
+.cryptmobile-default .cryptdonate-nav-default {
 	width: 100%;
 	margin: 0 auto;
 	height: 1.5em;
 	border-radius: 10px;
 }
 
-.cryptmobile .cryptdonate-nav:hover {
+.cryptmobile-default .cryptdonate-nav-default:hover {
 	height: 100%;
 }
 
-.cryptmobile .cryptdonate-nav:hover .cryptdonate-iconswrap {
+.cryptmobile-default .cryptdonate-nav-default:hover .cryptdonate-iconswrap-default {
 	display: block;
 	opacity: 1;
 }
 
-.cryptmobile .cryptdonate-iconswrap {
-	width: 98.2%;
+.cryptmobile-default .cryptdonate-iconswrap-default {
+	width: 98%;
 	display: none;
 	border-radius: 9px;
 	top: 5px;
@@ -165,19 +158,19 @@
 	);
 }
 
-.cryptmobile .cryptdonate-coindiv {
+.cryptmobile-default .cryptdonate-coindiv-default {
 	width: 25%;
 }
 
 /*Desktop Specify*/
-.cryptdesktop .cryptdonate-nav {
+.cryptdesktop-default .cryptdonate-nav-default {
 	width: 15em;
 	height: 100%;
 }
 
 
 /****************************Qr and Address****************************/
-.cryptdonate-qrArea {
+.cryptdonate-qrArea-default {
 	background: rgb(230,230,230);
 	height: 88%;
 	overflow: hidden;
@@ -187,7 +180,7 @@
 	padding-bottom: 2.1em;
 }
 
-.cryptdonate-qrCanvas {
+.cryptdonate-qrCanvas-default {
 	width: 100%;
 	height: 101%;
 	background: rgb(255,255,255);
@@ -197,18 +190,21 @@
 	overflow: hidden;
 }
 
-.cryptdonate-qrArea img  {
-	max-width: 280px;
+.cryptdonate-qrArea-default img  {
+	width: 260px;
 	border-radius: 10px;
-	width: 80%;
 	display: block;
+	-webkit-transition: all .5s ease-in;
+    -moz-transition: all .5s ease-in;
+    -ms-transition: all .5s ease-in;
+    transition: all .5s ease-in;
 }
 
-.cryptdonate-qrCanvas > div {
-	margin: 0 auto;	
+.cryptdonate-qrCanvas-default > div {
+	margin: 0 auto 4em auto;	
 	width: 80%;
-	max-width: 300px;
-	left: 2.5em;
+	max-width: 260px;
+	/*left: 2.5em;*/
 	position: relative;
 	-webkit-transition: all .5s ease-in;
 	-moz-transition: all .5s ease-in;
@@ -216,7 +212,7 @@
 	transition: all .5s ease-in;
 }
 
-.cryptdonate-address {
+.cryptdonate-address-default {
 	display: block;
 	position: absolute;
 	z-index: 5;
@@ -234,21 +230,60 @@
 	-webkit-transition: background .3s ease-in;
 }
 
-.cryptdonate-address:hover {
+.cryptdonate-address-default:hover {
 	outline: none;
 	background: rgb(255,255,230);
 }
 
 /*Mobile Specify*/
-.cryptmobile .cryptdonate-qrCanvas {
+.cryptmobile-default .cryptdonate-qrCanvas-default {
 	border-radius: 10px;
 	top: 5px;
 }
 
-.cryptmobile .cryptdonate-qrArea {
+.cryptmobile-default .cryptdonate-qrArea-default {
 	border-radius: 10px;
 }
 
-.cryptmobile .cryptdonate-qrCanvas > div {
+.cryptmobile-default .cryptdonate-qrCanvas-default > div {
 	top: 25px;
+	width: 220px;
+	max-width: 50%;
+}
+
+.cryptmobile-default .cryptdonate-qrCanvas-default img {
+    width: 100%;
+}
+
+.cryptmobile-default .cryptmobilemenu-default {
+    width: 30px;
+    height: 30px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAJtJREFUSMft1DEOwjAMheE/KkOvwyk6Q8/CWlL1QpmAI3ClSlTqUNIimsYW6sDgSJkif4P9HHdhn+MMMsigX6CCYaPiwEsPdRyp6RMvJYEnXge1NMCN84oqCVRAu6ZSkOcKCSoyamih7pxmKstsN/ubEpjc+D8pJzH5HEXqgZMYKZCRQmLkZC9UltGsyEQJjG7X/PvaN2KQQX8AjQHZOJlnh7VMAAAAAElFTkSuQmCC');
+    background-repeat: no-repeat;
+    background-size: 30px;
+    display: block;
+    position: absolute;
+    z-index: 50;
+    top: 1px;
+    right: 5px;
+}
+
+.cryptdonate-copy-default {
+    display:block;
+    position: absolute;
+    right: 5px;
+    bottom: 2.3em;
+    width: 35px;
+    height: 35px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAMtJREFUSMdjYMAPrBh2Mnxh+AYkLRkoACEMvxn+Q+FvhkByjRFg+AA3BgTfMfARp9GW4RzDXxStIHiDQZZBjuEWhvg/oGobbMbIAsPiPxbYBpbtwCr3hUEG06B8rEr/M9xkkGdQZLiNQzYfpp0JbpAgmGxkYATCRiQL1BgeMNxjUEESQVYjiGkQhWDwGcSCVfQAXj0HSDHowNAPo1GDRg0aNWjUoMFiEAIU4qgC8cN84qtsfPATgzQ2N9kwnMXSiMAF/zKcAbaeRgIAAGHyrEg8qQOnAAAAAElFTkSuQmCC');
+    background-size: 35px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.cryptdonate-copymessage-default {
+    position: absolute;
+    font-size: 12px;
+    bottom: 2.3em;
+    left: 5px;
 }

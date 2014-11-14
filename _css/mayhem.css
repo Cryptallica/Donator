@@ -1,0 +1,260 @@
+/****************************Global Crypt Donate****************************/
+.cryptdonate-wrapper-mayhem {
+	display: block;
+	font-size: 16px;
+	position: relative;
+	margin: 0 auto;
+	background: rgb(0,0,0);
+	box-shadow: 8px 8px 0 rgb(60,0,60);
+	max-width: 40em;
+	width: auto;
+	height: 18em;
+	padding-left: 15em;
+	font-family: helvetica;
+	font-weight: 100;
+}
+
+.cryptmobile-mayhem {
+	padding-left: 0;
+}
+
+
+/****************************Main Nav****************************/
+.cryptdonate-header-mayhem {
+	font-size: 1.2em;
+	font-weight: 100;
+	background: rgb(40,40,40);
+	color: rgb(230,230,230);
+	position: absolute;
+	top: 0;
+	left:0;
+	width: 100%;
+	padding: 5px 0;
+	text-align: center;
+	margin: 0;
+	border-bottom: 1px solid rgb(0,0,0);
+	z-index: 2;
+}
+
+.cryptdonate-headercoin-mayhem {
+	color: rgb(130,130,130);
+}
+
+.cryptdonate-nav-mayhem {
+	position: absolute;
+	z-index: 6;
+	left: 0;
+	top: 0;
+	
+	border-right: 1px solid rgb(0,0,0);	
+	background: rgb(0,0,0);
+}
+
+.cryptdonate-iconswrap-mayhem {
+	padding: 2.5em 5px 0 5px;
+	position: absolute;
+	height: 15.5em;
+	overflow-y: auto;
+	color: rgb(180,180,180);
+}
+
+.cryptdonate-iconswrap-mayhem .selected {
+	background: rgb(230,230,230) !important;
+	color: rgb(0,0,0);
+}
+
+.cryptdonate-coindiv-mayhem {
+	width: 33.3%;
+	padding: 5px 0;
+	display: inline-block;
+	cursor: pointer;
+	position: relative;
+	top: 0;
+	-webkit-transition: all .2s ease-out;
+	-moz-transition: all .2s ease-out;
+	-ms-transition: all .2s ease-out;
+	transition: all .2s ease-out;
+}
+
+.cryptdonate-coindiv-mayhem:last-of-type {
+	margin-bottom: 5px;
+}
+
+.cryptdonate-coindiv-mayhem:hover {
+	background: rgb(40,40,40);
+	color: rgb(255,255,255);
+}
+
+.cryptdonate-coindiv-mayhem > img {
+	width: 80%;
+	display: block;
+	margin: 0 auto;
+	border: none;
+}
+
+.cryptdonate-coindiv-mayhem > h3 {
+	font-size: 10px;
+	text-align: center;
+}
+
+/*Mobile Specify*/
+.cryptmobile-mayhem .cryptdonate-header-mayhem {
+	border-right: 1px solid rgb(0,0,0);
+}
+
+.cryptmobile-mayhem .cryptdonate-nav-mayhem {
+	width: 100%;
+	margin: 0 auto;
+	height: 1.5em;
+}
+
+.cryptmobile-mayhem .cryptdonate-nav-mayhem:hover {
+	height: 100%;
+}
+
+.cryptmobile-mayhem .cryptdonate-nav-mayhem:hover .cryptdonate-iconswrap-mayhem {
+	display: block;
+	opacity: 1;
+}
+
+.cryptmobile-mayhem .cryptdonate-iconswrap-mayhem {
+	width: 98%;
+	display: none;
+	top: 5px;
+	opacity: 0;
+		
+	border-bottom: 1px solid rgb(0,0,0);
+	background: rgb(0,0,0);
+}
+
+.cryptmobile-mayhem .cryptdonate-coindiv-mayhem {
+	width: 25%;
+}
+
+/*Desktop Specify*/
+.cryptdesktop-mayhem .cryptdonate-nav-mayhem {
+	width: 15em;
+	height: 100%;
+}
+
+
+/****************************Qr and Address****************************/
+.cryptdonate-qrArea-mayhem {
+	height: 88%;
+	overflow: hidden;
+	display: block;
+	position: relative;
+	padding-bottom: 2.1em;
+}
+
+.cryptdonate-qrCanvas-mayhem {
+	width: 100%;
+	height: 100%;
+	background: rgb(0,0,0);
+	position: relative;
+	top: 0;
+	overflow-x: auto;
+	overflow: hidden;
+}
+
+.cryptdonate-qrArea-mayhem img  {
+	width: 260px;
+	display: block;
+	-webkit-transition: all .5s ease-in;
+    -moz-transition: all .5s ease-in;
+    -ms-transition: all .5s ease-in;
+    transition: all .5s ease-in;
+    
+    -webkit-filter: invert(100%);
+    -moz-filter: invert(100%);
+    -ms-filter: invert(100%);
+    filter: invert(100%);
+}
+
+.cryptdonate-qrCanvas-mayhem > div {
+	margin: 0 auto 4em auto;	
+	width: 80%;
+	max-width: 260px;
+	/*left: 2.5em;*/
+	position: relative;
+	-webkit-transition: all .5s ease-in;
+	-moz-transition: all .5s ease-in;
+	-ms-transition: all .5s ease-in;
+	transition: all .5s ease-in;
+}
+
+.cryptdonate-address-mayhem {
+	display: block;
+	position: absolute;
+	z-index: 5;
+	bottom: 0px;
+	padding: 8px 0 8px 3%;
+	font-size: 12px;
+	margin: 0;
+	left: 0;
+	width: 97.1%;
+	border: none;
+	border-top: 1px solid rgb(0,0,0);
+	background: rgb(0,0,0);
+	color: rgb(180,180,180);
+	text-decoration: none;
+	-webkit-transition: background .3s ease-in;
+}
+
+.cryptdonate-address-mayhem:hover {
+	outline: none;
+	background: rgb(230,230,230);
+	color: rgb(0,0,0);
+}
+
+/*Mobile Specify*/
+.cryptmobile-mayhem .cryptdonate-qrCanvas-mayhem {
+	top: 5px;
+}
+
+.cryptmobile-mayhem .cryptdonate-qrArea-mayhem {
+
+}
+
+.cryptmobile-mayhem .cryptdonate-qrCanvas-mayhem > div {
+	top: 25px;
+	width: 220px;
+	max-width: 50%;
+}
+
+.cryptmobile-mayhem .cryptdonate-qrCanvas-mayhem img {
+    width: 100%;
+}
+
+.cryptmobile-mayhem .cryptmobilemenu-mayhem {
+    width: 30px;
+    height: 30px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAJtJREFUSMft1DEOwjAMheE/KkOvwyk6Q8/CWlL1QpmAI3ClSlTqUNIimsYW6sDgSJkif4P9HHdhn+MMMsigX6CCYaPiwEsPdRyp6RMvJYEnXge1NMCN84oqCVRAu6ZSkOcKCSoyamih7pxmKstsN/ubEpjc+D8pJzH5HEXqgZMYKZCRQmLkZC9UltGsyEQJjG7X/PvaN2KQQX8AjQHZOJlnh7VMAAAAAElFTkSuQmCC');
+    background-repeat: no-repeat;
+    background-size: 30px;
+    display: block;
+    position: absolute;
+    z-index: 50;
+    top: 1px;
+    right: 5px;
+}
+
+.cryptdonate-copy-mayhem {
+    display:block;
+    position: absolute;
+    right: 5px;
+    bottom: 2.3em;
+    width: 35px;
+    height: 35px;
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAkCAQAAABLCVATAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAMtJREFUSMdjYMAPrBh2Mnxh+AYkLRkoACEMvxn+Q+FvhkByjRFg+AA3BgTfMfARp9GW4RzDXxStIHiDQZZBjuEWhvg/oGobbMbIAsPiPxbYBpbtwCr3hUEG06B8rEr/M9xkkGdQZLiNQzYfpp0JbpAgmGxkYATCRiQL1BgeMNxjUEESQVYjiGkQhWDwGcSCVfQAXj0HSDHowNAPo1GDRg0aNWjUoMFiEAIU4qgC8cN84qtsfPATgzQ2N9kwnMXSiMAF/zKcAbaeRgIAAGHyrEg8qQOnAAAAAElFTkSuQmCC');
+    background-size: 35px;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.cryptdonate-copymessage-mayhem {
+    position: absolute;
+    font-size: 12px;
+    bottom: 2.3em;
+    left: 5px;
+}

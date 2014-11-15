@@ -217,7 +217,9 @@ CryptDonator.prototype = {
             
             //Create QR url
             coin["address"] = coin["address"] || "";
-            var qrUrl = coin["coinname"] + ":" + coin["address"];
+            var coinNameUrl = coin["coinname"];
+            if(coin["coinname"] === "peercoin") {var coinNameUrl = "peercoin";}
+            var qrUrl = coinNameUrl + ":" + coin["address"];
             if(coin["label"]) {
                 qrUrl+="?label="+ encodeURIComponent(coin["label"]);
             }
@@ -298,6 +300,8 @@ CryptDonator.prototype = {
            return;
         }
         
+        //Setup using zeroClipboard. Creates using flash
+        try {
         crypt.zeroClipboard = new ZeroClipboard(crypt.qrCopy);
         console.log(crypt.qrCopy);
         crypt.zeroClipboard.on("ready", function(readyEvent) {
@@ -308,6 +312,10 @@ CryptDonator.prototype = {
                 }, 2000);
             });
         });
+        } 
+        //No fallback for zeroClipboard
+        catch(e) {}
+        
     },
     
     //Change size on window resize < 570 >

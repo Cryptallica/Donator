@@ -1,0 +1,26 @@
+{
+    "name": "cryptallica-donater",
+    "version": "1.0.0",
+    "description": "Cryptallica Donator =======",
+    "main": "build-coins.js",
+    "directories": {
+        "lib": "lib"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Cryptallica/Donator.git"
+    },
+    "dependencies": {
+        "async": "*",
+        "request": ""
+    },
+    "author": "",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/Cryptallica/Donator/issues"
+    },
+    "homepage": "https://github.com/Cryptallica/Donator#readme"
+}

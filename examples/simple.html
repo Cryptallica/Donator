@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+
+    <head>
+        <title>Cryptallica Donate</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <script src="../donator.js"></script>
+    </head>
+
+    <body>
+
+        <h2>default</h2>
+        <div id="donater"></div>
+
+        <h2>darkthrone</h2>
+        <div id="darkthrone"></div>
+
+        <h2>mayhem</h2>
+        <div id="mayhem"></div>
+
+
+        <script type="text/javascript">
+
+            var coins = [
+                {
+                    "vtc": {
+                        "address": "1Hyhm23xzUeRKjGCQMxBjmQMXGmtWPcnko"
+                    },
+                }
+            ];
+
+            var defaultTheme = new Cryptallica.Donater({
+                domElement: "donater",
+                coins: coins
+            });
+
+            var darkthrone = new Cryptallica.Donater({
+                domElement: "donater",
+                coins: coins,
+                theme: "darkthrone"
+            });
+
+            var mayhem = new Cryptallica.Donater({
+                domElement: "donater",
+                coins: coins,
+                theme: "mayhem"
+            });
+
+        </script>
+
+    </body>
+
+</html>

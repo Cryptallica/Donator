@@ -9,6 +9,8 @@ var FS = require( "fs" );
 
 var Request = require( "request" );
 
+var Async = require( "async" );
+
 
 //
 
@@ -30,9 +32,21 @@ HTTPS.get( url, function( res ) {
 
     getFile( url, function( body ) {
 
-        FS.writeFileSync( buildURL, body);
-
         var list = JSON.parse( body );
+
+        var hashList = {};
+
+        var ll = list.length;
+
+        for( var i = 0; i < ll; ++ i ) {
+
+            var coin = list[ i ];
+
+            hashList[ coin.symbol ] = coin;
+
+        }
+
+        FS.writeFileSync( buildURL, JSON.stringify( hashList ) );
 
         downloadImages( list );
 
@@ -67,7 +81,8 @@ function download( uri, filename, callback ){
     Request.head(uri, function( err, res, body ) {
 
         Request( uri )
-            .pipe( FS.createWriteStream( filename ) );
+            .pipe( FS.createWriteStream( filename ) )
+            .on( "close", callback );
 
     });
 
@@ -75,22 +90,20 @@ function download( uri, filename, callback ){
 
 function downloadImages( list ) {
 
-    var ll = list.length;
+    Async.mapLimit( list, 50, downloadImage, function( err, results ) {
 
-    for( var i = 0; i < ll; ++ i ) {
-
-        downloadImage( list[ i ] );
-
-    }
+    });
 
 }
 
-function downloadImage( coin ) {
+function downloadImage( coin, callback ) {
+
+    console.log( "Downloading coin image : " + coin.id );
 
     var url = "https://files.coinmarketcap.com/static/img/coins/128x128/" + coin.id + ".png"
 
     var saveUrl = IMAGES_DIR + coin.id + ".png";
 
-    download( url, saveUrl );
+    download( url, saveUrl, callback );
 
 }

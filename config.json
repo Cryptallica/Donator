@@ -12,74 +12,74 @@
 	"cannabiscoin": {
 		"address": "CHE5skn37JAdVoQhZuLKpiAA3k7T3pGDH8"
 	},
-	
+
 	"reddcoin": {
 		"address": "RcQrUa1tnFHyrvJiQn1YvB1xd7i5jncVuL"
 	},
-	
+
 	"dogecoin": {
 		"address": "D7FZRJijWDtoRmivMB1wHeVJMgH9JAHGc4",
-		"label": ""	
+		"label": ""
 	},
-	
+
 	"namecoin": {
 		"address": "MyTHAKpytEkuVP9KkxikpY4CtWYvAaUcmr"
 	},
-	
+
 	"darkcoin": {
 		"address": "XeSPqTMLwYrba5vWeMkmk3ChiYH8sBZnmW"
 	},
-	
+
 	"peercoin": {
 		"address": "PMMzve6cVuyJ2tvvLZhztdKoFxiPqBmKcy"
 	},
-	
+
 	"feathercoin": {
 		"address": "6j8BduXeNFV7QynDKhUdkNJC3yTkZYVZ2q"
 	},
-	
+
 	"quarkcoin": {
 		"address": "QSUQoGGqUpWRKYiW2BwwatHS1WfNFe9LN7"
 	},
-	
+
 	"digitalcoin": {
 		"address": "DFVLRj2rfKtSPb8SHgNioPDwMWmzTdxDbM"
 	},
-	
+
 	"stellar": {
-		"address": "g4VSoWb56FUDbvsaQvEPjKY1Xj2AeeTK2U"	
+		"address": "g4VSoWb56FUDbvsaQvEPjKY1Xj2AeeTK2U"
 	},
-	
+
 	"blackcoin": {
 	   "address": "BHVASGroD5eKishe82ZynR3PYFT7wBvov8"
 	},
-	
+
 	"anoncoin" : {
 	   "address": "APPabzeunF1BA9CCt8Ype6Yh3AhV3Krmef"
 	},
-	
+
 	"mooncoin" : {
 	   "address": "2MPiuP39ssKW4rDBWLgunHLkKxbMe5XK8P"
 	},
-	
+
 	"terracoin" : {
 	   "address": "1NsMrMFsja7yF8Rjm1yisbuPXX4oUmK9zd",
 	   "label": "MrFriggle"
 	},
-	
+
 	"mintcoin" : {
 	   "address": "MY8ME1N4sHdXKvQwQm9HUJEY3xXQo4LvrC"
 	},
-	
+
 	"nxt": {
 	   "address": "NXT-5TGU-S6Y4-X2B3-3QWZQ",
 	   "label": "nxtcommunity.org"
 	},
-	
+
 	"primecoin" : {
 	   "address": "ARYBrd7k9Tu4oTMYuQ8Vrg875mxECfHVXG"
 	},
-	
+
 	"flappycoin" : {
 	   "address": "asdf"
 	}

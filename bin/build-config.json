@@ -1,0 +1,11 @@
+{
+    "type": "javascript",
+    "header": "//Cryptallica Donater\n",
+    "compile": [
+        "lib/vanillaqr.min.js",
+        "lib/zeroclipboard/ZeroClipboard.min.js",
+        "src/Donater.js",
+        "src/MarketCap.part.js",
+        "data/market-cap.json"
+    ]
+}

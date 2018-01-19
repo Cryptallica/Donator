@@ -48,16 +48,20 @@ Cryptallica.Donater = function( customize ) {
 
     scope.theme = scope.customize.theme || "default";
 
+    scope.coins = {};
+
 
     //html
 
     scope.headEl = document.getElementsByTagName("head")[0];
 
-    this.init();
+    scope.init();
+
 }
 
 //prototype loads up everything from init
-CryptDonator.prototype = {
+
+Cryptallica.Donater.prototype = {
 
 
     /**
@@ -77,6 +81,11 @@ CryptDonator.prototype = {
     theme: "",
 
 
+    //Loaded coins
+
+    coins: {},
+
+
     //Initialize, will setup libs and files and get config on window load
     init: function() {
 
@@ -89,7 +98,7 @@ CryptDonator.prototype = {
         scope.loadConfig();
         scope.setupCopier();
 
-        addEvent("resize", window, function() {
+        addEventListener("resize", window, function() {
             scope.changeSize();
         });
 
@@ -102,19 +111,28 @@ CryptDonator.prototype = {
 
     getLocation: function() {
 
+        var scope = this;
+
         //Script location
         var scripts = document.getElementsByTagName("script");
 
         for(var i=0;i < scripts.length;i++) {
-            var scriptLocation = scripts[i].src.split("donator.js");
+
+            var scriptLocation = scripts[i].src.split("donator.min.js");
 
             if(scriptLocation.length === 2) {
-                this.serverLocation = scriptLocation[0];
+
+                scope.serverLocation = scriptLocation[0];
+
             }
 
         }
 
-        if(!this.serverLocation) {console.log("Script location not found");}
+        if( ! scope.serverLocation ) {
+
+            console.log("Script location not found");
+
+        }
 
     },
 
@@ -143,32 +161,38 @@ CryptDonator.prototype = {
     //
 
     loadHTML: function() {
-        var doc = document;
+
         var scope = this;
-        var t = "-"+this.theme;
+
+        var doc = document;
+        var t = "-" + scope.theme;
 
         //create wrapper
         scope.wrapper = doc.createElement("div");
-        scope.wrapper.className = "scopedonate-wrapper" + t;
+        scope.wrapper.className = "cryptdonate-wrapper" + t;
 
         //Create coin navigator
         scope.nav = doc.createElement("div");
-        scope.nav.className = "scopedonate-nav" + t;
+        scope.nav.className = "cryptdonate-nav" + t;
+
         //Create header
         scope.header = doc.createElement("h2");
-        scope.header.className = "scopedonate-header" + t;
+        scope.header.className = "cryptdonate-header" + t;
         scope.header.innerHTML = "Donate";
         scope.headerCoin = doc.createElement("span");
-        scope.headerCoin.className = "scopedonate-headercoin" + t;
+        scope.headerCoin.className = "cryptdonate-headercoin" + t;
+
         //Create mobile menu icon
         scope.mobileMenu = doc.createElement("a");
         scope.mobileMenu.className = "scopemobilemenu" + t;
+
         //Create icons div
         scope.iconsWrap = doc.createElement("span");
-        scope.iconsWrap.className = "scopedonate-iconswrap" + t;
-        addEvent("click", scope.iconsWrap, function(e) {
+        scope.iconsWrap.className = "cryptdonate-iconswrap" + t;
+        addEventListener("click", scope.iconsWrap, function(e) {
             scope.changeQr(e);
         });
+
         //append header +  to navigator
         scope.header.appendChild(scope.headerCoin);
         scope.nav.appendChild(scope.header);
@@ -213,34 +237,58 @@ CryptDonator.prototype = {
     //Grabs config from either customize.src or ./config.json
 
     loadConfig: function() {
-        var scope = this;
-        scope.coin = [];
 
-        //Extract data from config
-        function extractConfig() {
-            for( var coin in scope.config.coins ) {
-                var coinArray = scope.config[coin];
-                coinArray["coinname"] = coin;
-                scope.coin.push(coinArray);
+        var scope = this;
+
+        for( var coin in scope.config.coins ) {
+
+            var coinArray = scope.config[ coin ];
+
+            var coinData = scope.getCoinData( coin );
+
+            if( coinData === null ) {
+
+                console.warn( "No coin data in market cap for " + coin );
+
             }
 
-            if(scope.coin.length === 0) {return false;}
+            if( ! coinArray.address ) {
 
-            scope.loadCoins();
+                console.warn( "No address given for coin " + coin );
+
+            }
+
+            scope.coins.push( coinData );
 
         }
 
-        //get config.json found in this file root
-        var configUrl = scope.customize.src || scope.serverLocation + "config.json";
-        ajaxJson(configUrl, function(responseText) {
-            if(typeof(JSON) === "undefined") {
-                scope.config = eval("("+responseText+")");
-            } else {
-                scope.config = JSON.parse(responseText);
-            }
+        if( scope.coins.length === 0 ) {
 
-            extractConfig();
-        });
+            console.warn( "No coins given to config" );
+
+            return;
+
+        }
+
+        scope.loadCoins();
+
+    },
+
+
+
+    /**
+     * Get coin data from market cap
+     *
+     * @param String id
+     *
+     * @return Object|null
+     *
+     */
+
+    getCoinData: function( id ) {
+
+        return Cryptallica.Donater.Coins[ id.toUpperCase() ] || null;
+
     },
 
 
@@ -253,8 +301,10 @@ CryptDonator.prototype = {
         var coinArray = [];
 
         var l = scope.coin.length;
+
         for(var i = 0; i < l; i++) {
-            var coin = scope.coin[i];
+
+            var coin = scope.coins[i];
 
             //Create Icons
             var coinDiv = coin["coinDiv"] = doc.createElement("a");
@@ -263,11 +313,11 @@ CryptDonator.prototype = {
 
             //Create icon Img
             var coinImage = doc.createElement("img");
-            coinImage.src = scope.serverLocation + "images/" + coin["coinname"] + ".png";
+            coinImage.src = scope.serverLocation + "images/" + coin["id"] + ".png";
 
             //Create Icon Text
             var iconText = doc.createElement("h3");
-            iconText.innerHTML = coin["coinname"].capitalize();
+            iconText.innerHTML = coin["name"];
 
             //Append Icons
             coinDiv.appendChild(coinImage);
@@ -281,29 +331,42 @@ CryptDonator.prototype = {
                 classOff: "sizeDown"
             });
 
+
             //Create QR url
+
             coin["address"] = coin["address"] || "";
-            var coinNameUrl = coin["coinname"];
-            if(coin["coinname"] === "peercoin") {var coinNameUrl = "peercoin";}
+
+            var coinNameUrl = coin["id"];
+
             var qrUrl = coinNameUrl + ":" + coin["address"];
+
             if(coin["label"]) {
+
                 qrUrl+="?label="+ encodeURIComponent(coin["label"]);
+
             }
+
 
             //Check if has image SRC
             if(coin["src"]) {
+
                 var qrimage = new Image();
                 qrimage.src = coin["src"];
-                coin["qrElement"].appendChild(qrimage);
+                coin["qrElement"].appendChild( qrimage );
                 var qrData = coin["qrElement"];
+
             }
+
             //Create thru canvas if no src set
             else {
+
                 var qrData = new VanillaQR(coin["qrElement"], qrUrl, {png: true});
+
             }
 
             //Append to qr viewer
             this.qrCanvas.appendChild(coin["qrElement"]);
+
         }
 
         scope.changeQr(scope.coin[0]["coinname"]);
@@ -395,37 +458,55 @@ CryptDonator.prototype = {
 
     },
 
+
     //Change size on window resize < 570 >
+
     changeSize: function() {
+
         var scope = this;
         var wz = window.innerWidth;
         var t = "-" + scope.theme;
+
         //Mobile layout
+
         if(wz < 570 && scope.viewport !== "mobile") {
             scope.wrapper.className = "scopedonate-wrapper" + t + " scopemobile" + t;
             scope.viewport = "mobile";
             scope.touchShow();
         }
+
         //Desktop layout
+
         else if(wz > 570 && this.viewport !== "desktop") {
             scope.wrapper.className = "scopedonate-wrapper" + t + " scopedesktop" + t;
             scope.viewport = "desktop";
             scope.header.onclick = null;
             scope.nav.style.height = null;
         }
+
     },
 
+
     //Touch show added on mobile element because of lack of hover
+
     touchShow: function() {
 
         var scope = this;
+
         scope.nav.style.height = "1.5em";
+
         scope.header.onclick = function() {
+
             if(scope.iconsWrap.style.display === "block") {
+
                 scope.iconsWrap.style.display = "none";
+
             } else {
+
                 scope.iconsWrap.style.display = "block";
+
             }
+
         };
 
     }
@@ -440,20 +521,7 @@ CryptDonator.prototype = {
 Cryptallica.Donater.Themes = {};
 
 
-/**************Utils**************/
-
-String.prototype.capitalize = function() {
-    return this.charAt(0).toUpperCase() + this.slice(1);
-};
-
-function addEvent(evnt, elem, func, bubble) {
-    if (elem.addEventListener) {
-        elem.addEventListener(evnt,func,bubble);
-    } else if (elem.attachEvent) {
-            elem.attachEvent("on"+evnt, func);
-    }
-    else { elem[evnt] = func;}
-}
+/** Utils **/
 
 //Animator
 function animateHTML(animator, customize) {
@@ -536,3 +604,4 @@ animateHTML.prototype = {
         }
     }
 };
+

@@ -1,3 +1,4 @@
+
 /**
  * Donater
  */
@@ -10,7 +11,9 @@ Cryptallica.Donater = function( customize ) {
 
     var scope = this;
 
-    var customize = typeof( customize ) === "object" ? customize : {};
+    var customize = typeof( customize ) === "object" ?
+        Object.assign({}, customize )
+        : {};
 
     scope.config = customize;
 
@@ -46,7 +49,7 @@ Cryptallica.Donater = function( customize ) {
 
     scope.config = customize;
 
-    scope.theme = scope.customize.theme || "default";
+    scope.theme = scope.config.theme || "default";
 
     scope.coins = {};
 
@@ -81,6 +84,33 @@ Cryptallica.Donater.prototype = {
     theme: "",
 
 
+    /**
+     * Dom Elements
+     */
+
+    nav: null,
+
+    header: null,
+
+    headerCoin: null,
+
+    mobileMenu: null,
+
+    iconsWrap: null,
+
+    qrArea: null,
+
+    qrCanvas: null,
+
+    qrAddress: null,
+
+    qrCopy: null,
+
+    qrCopyMessage: null,
+
+    wrapper: null,
+
+
     //Loaded coins
 
     coins: {},
@@ -98,7 +128,7 @@ Cryptallica.Donater.prototype = {
         scope.loadConfig();
         scope.setupCopier();
 
-        addEventListener("resize", window, function() {
+        window.addEventListener("resize", window, function() {
             scope.changeSize();
         });
 
@@ -116,11 +146,11 @@ Cryptallica.Donater.prototype = {
         //Script location
         var scripts = document.getElementsByTagName("script");
 
-        for(var i=0;i < scripts.length;i++) {
+        for( var i=0;i < scripts.length;i++ ) {
 
-            var scriptLocation = scripts[i].src.split("donator.min.js");
+            var scriptLocation = scripts[i].src.split("donater.min.js");
 
-            if(scriptLocation.length === 2) {
+            if( scriptLocation.length === 2 ) {
 
                 scope.serverLocation = scriptLocation[0];
 
@@ -130,7 +160,7 @@ Cryptallica.Donater.prototype = {
 
         if( ! scope.serverLocation ) {
 
-            console.log("Script location not found");
+            console.warn("Script location not found");
 
         }
 
@@ -143,9 +173,9 @@ Cryptallica.Donater.prototype = {
 
         var scope = this;
 
-        if( Cryptallica.Donater.Themes[ scope.theme ] ) {
+        if( ! Cryptallica.Donater.Themes[ scope.theme ] ) {
 
-            var stylesheet = document.createElement("link");
+            var stylesheet = document.createElement( "link" );
             stylesheet.rel = "stylesheet";
             stylesheet.href = scope.serverLocation + "css/" + scope.theme + ".css";
 
@@ -189,9 +219,10 @@ Cryptallica.Donater.prototype = {
         //Create icons div
         scope.iconsWrap = doc.createElement("span");
         scope.iconsWrap.className = "cryptdonate-iconswrap" + t;
-        addEventListener("click", scope.iconsWrap, function(e) {
+
+        scope.iconsWrap.addEventListener("click", function(e) {
             scope.changeQr(e);
-        });
+        }, false );
 
         //append header +  to navigator
         scope.header.appendChild(scope.headerCoin);
@@ -212,9 +243,12 @@ Cryptallica.Donater.prototype = {
         scope.qrAddress = doc.createElement("a");
         scope.qrAddress.className = "cryptdonate-address" + t;
 
+
         //Create qr copy + message
         scope.qrCopy = doc.createElement("a");
         scope.qrCopy.className = "cryptdonate-copy" + t;
+        scope.qrCopy.setAttribute( "id", "cryptallica-copy-" + Date.now() );
+
         scope.qrCopyMessage = doc.createElement("p");
         scope.qrCopyMessage.className = "cryptdonate-copymessage" + t;
 
@@ -229,7 +263,7 @@ Cryptallica.Donater.prototype = {
         scope.wrapper.appendChild(scope.qrArea);
 
         //Append all to window
-        scope.window.appendChild(scope.wrapper);
+        scope.domElement.appendChild(scope.wrapper);
 
     },
 
@@ -242,9 +276,10 @@ Cryptallica.Donater.prototype = {
 
         for( var coin in scope.config.coins ) {
 
-            var coinArray = scope.config[ coin ];
+            var coinArray = scope.config.coins[ coin ];
 
             var coinData = scope.getCoinData( coin );
+            coinData = Object.assign({}, coinData );
 
             if( coinData === null ) {
 
@@ -258,7 +293,11 @@ Cryptallica.Donater.prototype = {
 
             }
 
-            scope.coins.push( coinData );
+            var sym = coin.toUpperCase();
+
+            scope.config.coins[ sym ] = coinArray;
+
+            scope.coins[ sym ] = coinData;
 
         }
 
@@ -296,20 +335,20 @@ Cryptallica.Donater.prototype = {
 
     loadCoins: function() {
 
-        var doc = document;
         var scope = this;
+
+        var doc = document;
         var coinArray = [];
 
-        var l = scope.coin.length;
+        for(var coinName in scope.coins ) {
 
-        for(var i = 0; i < l; i++) {
-
-            var coin = scope.coins[i];
+            var coin = scope.coins[ coinName ];
+            var configCoin = scope.coins[ coinName ];
 
             //Create Icons
             var coinDiv = coin["coinDiv"] = doc.createElement("a");
-            coinDiv.setAttribute("data", coin["coinname"]);
-            coinDiv.className = "scopedonate-coindiv"  + "-" + scope.theme;
+            coinDiv.setAttribute("data", coin["symbol"]);
+            coinDiv.className = "cryptdonate-coindiv"  + "-" + scope.theme;
 
             //Create icon Img
             var coinImage = doc.createElement("img");
@@ -326,7 +365,7 @@ Cryptallica.Donater.prototype = {
 
             //Create Qr wrap
             coin["qrElement"] = doc.createElement("div");
-            coin["qrAni"] = new animateHTML(coin["qrElement"], {
+            coin["qrAni"] = new animateHTML( coin["qrElement"], {
                 classOn: "sizeUp",
                 classOff: "sizeDown"
             });
@@ -334,11 +373,9 @@ Cryptallica.Donater.prototype = {
 
             //Create QR url
 
-            coin["address"] = coin["address"] || "";
-
             var coinNameUrl = coin["id"];
 
-            var qrUrl = coinNameUrl + ":" + coin["address"];
+            var qrUrl = coinNameUrl + ":" + configCoin.address;
 
             if(coin["label"]) {
 
@@ -360,7 +397,11 @@ Cryptallica.Donater.prototype = {
             //Create thru canvas if no src set
             else {
 
-                var qrData = new VanillaQR(coin["qrElement"], qrUrl, {png: true});
+                var qrData = new VanillaQR({
+                    url: qrUrl
+                });
+
+                coin.qrElement.appendChild( qrData.domElement );
 
             }
 
@@ -369,10 +410,13 @@ Cryptallica.Donater.prototype = {
 
         }
 
-        scope.changeQr(scope.coin[0]["coinname"]);
+        scope.changeQr( Object.keys( scope.coins )[0] );
+
     },
 
+
     //Change qr called on iconswrap element
+
     changeQr: function(e) {
 
         //Get string or coinname
@@ -386,7 +430,7 @@ Cryptallica.Donater.prototype = {
 
             var thisTarget, thisTargetTag;
 
-            if(!e.target) {
+            if( ! e.target ) {
 
                 thisTarget = event.srcElement;
                 console.dir(thisTarget);
@@ -400,61 +444,83 @@ Cryptallica.Donater.prototype = {
             }
 
             if(thisTargetTag === "H3" ||
-               thisTargetTag === "IMG") {
+                thisTargetTag === "IMG") {
                 thisTarget = thisTarget.parentNode;
             }
 
             var coinName = thisTarget.getAttribute("data");
+
         }
+
 
         //Don't change if currently set.
-        if(scope.currentCoin) {
-            if(scope.currentCoin["coinname"] === coinName) {return;}
+
+        if( scope.currentCoin ) {
+
+            if( scope.currentCoin["name"] === coinName ) { return; }
+
             //Hide Old Qr
-            setTimeout(function() {
-                scope.currentCoin["coinDiv"].className = "scopedonate-coindiv" + "-" + scope.theme;
+
+            setTimeout( function() {
+
+                scope.currentCoin["coinDiv"].className = "cryptdonate-coindiv" + "-" + scope.theme;
                 scope.currentCoin["qrAni"].hide();
+
             }, 50);
+
         }
 
-        var coin = this.config[coinName];
-        this.qrAddress.innerHTML = coin["address"];
-        this.qrAddress.href = coin["coinname"] + ":" + coin["address"];
-        this.qrCopy.setAttribute("data-clipboard-text", coin["address"]);
+        var coin = scope.coins[coinName];
+        var configCoin = scope.config.coins[coinName];
+
+        scope.qrAddress.innerHTML = configCoin.address;
+        scope.qrAddress.href = coin["name"] + ":" + configCoin.address;
 
         setTimeout(function() {
+
             coin["qrAni"].show();
             coin["coinDiv"].className = coin["coinDiv"].className + " selected";
             scope.currentCoin = coin;
-            scope.headerCoin.innerHTML = " " + coin["coinname"].capitalize();
-        }, 500);
+            scope.headerCoin.innerHTML = " " + coin["name"];
+
+        }, 250 );
+
     },
 
-    //Copy qr address to clipboard using ZeroClipboard
+
+    /**
+     * Copy qr address to clipboard using https://clipboardjs.com/
+     */
+
     setupCopier: function() {
+
         var scope = this;
-        if(typeof(ZeroClipboard) === "undefined") {
-           setTimeout(function() {
-               scope.setupCopier();
-           });
-           return;
+
+        if( ! Clipboard.isSupported() ) {
+
+            scope.qrCopy.style.display = "none";
+
+            return;
+
         }
 
-        //Setup using zeroClipboard. Creates using flash
-        try {
-        scope.zeroClipboard = new ZeroClipboard(scope.qrCopy);
-        console.log(scope.qrCopy);
-        scope.zeroClipboard.on("ready", function(readyEvent) {
-            scope.zeroClipboard.on("aftercopy", function(event) {
-                scope.qrCopyMessage.innerHTML = "Copied " + scope.currentCoin["coinname"] + " address to clipboard";
-                setTimeout(function() {
-                    scope.qrCopyMessage.innerHTML = "";
-                }, 2000);
-            });
+        var clipboard = new Clipboard( scope.qrCopy, {
+            text: function() {
+                return scope.qrAddress.innerHTML
+            }
         });
-        }
-        //No fallback for zeroClipboard
-        catch(e) {}
+
+        clipboard.on('success', function(e) {
+
+            scope.qrCopyMessage.innerHTML = scope.currentCoin.name + " address copied";
+
+            setTimeout( function() {
+
+                scope.qrCopyMessage.innerHTML = "";
+
+            }, 1000 );
+
+        });
 
     },
 
@@ -470,7 +536,7 @@ Cryptallica.Donater.prototype = {
         //Mobile layout
 
         if(wz < 570 && scope.viewport !== "mobile") {
-            scope.wrapper.className = "scopedonate-wrapper" + t + " scopemobile" + t;
+            scope.wrapper.className = "cryptdonate-wrapper" + t + " scopemobile" + t;
             scope.viewport = "mobile";
             scope.touchShow();
         }
@@ -478,7 +544,7 @@ Cryptallica.Donater.prototype = {
         //Desktop layout
 
         else if(wz > 570 && this.viewport !== "desktop") {
-            scope.wrapper.className = "scopedonate-wrapper" + t + " scopedesktop" + t;
+            scope.wrapper.className = "cryptdonate-wrapper" + t + " scopedesktop" + t;
             scope.viewport = "desktop";
             scope.header.onclick = null;
             scope.nav.style.height = null;
@@ -525,9 +591,11 @@ Cryptallica.Donater.Themes = {};
 
 //Animator
 function animateHTML(animator, customize) {
-    if(typeof(animator) === "string") {this.animator = document.getElementById(animator);}
+    var scope = this;
+
+    if(typeof(animator) === "string") {scope.animator = document.getElementById(animator);}
     else if(typeof(animator) === "object") {
-        this.animator = animator;
+        scope.animator = animator;
     } else {
         console.log("Not object or string for animator.");
         return false;
@@ -536,14 +604,14 @@ function animateHTML(animator, customize) {
     customize = customize || {};
 
     //Animation Data
-    this.classOn = customize.classOn || "";
-    this.classOff = customize.classOff || "";
-    this.aniTime = customize.animationTime || 750;
-    this.showDefault = customize.showDefault || false;
+    scope.classOn = customize.classOn || "";
+    scope.classOff = customize.classOff || "";
+    scope.aniTime = customize.animationTime || 750;
+    scope.showDefault = customize.showDefault || false;
     //Wrapper Data
-    this.isOn = false;
+    scope.isOn = false;
 
-    this.init();
+    scope.init();
 }
 
 animateHTML.prototype = {
@@ -604,4 +672,3 @@ animateHTML.prototype = {
         }
     }
 };
-

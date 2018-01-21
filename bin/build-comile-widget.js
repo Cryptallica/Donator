@@ -4,9 +4,9 @@
 var COMPILER = require( "cfcompile" );
 var FS = require( "fs" );
 
-COMPILER.compileFromConfigFile(  __dirname + "/build-config.json",  function(compressed) {
+COMPILER.compileFromConfigFile(  __dirname + "/build-config-widget.json",  function(compressed) {
 
-    FS.writeFile( __dirname + "/build/donater.min.js", compressed, function( err ) {
+    FS.writeFile( __dirname + "/build/donater.widget.min.js", compressed, function( err ) {
 
         if(err) {
 

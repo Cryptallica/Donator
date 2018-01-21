@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 //Compiler test
 //By Chuck
 
@@ -6,7 +8,7 @@ var FS = require( "fs" );
 
 COMPILER.compileFromConfigFile(  __dirname + "/build-config.json",  function(compressed) {
 
-    FS.writeFile( __dirname + "/build/donater.min.js", compressed, function( err ) {
+    FS.writeFile( __dirname + "/../donater.min.js", compressed, function( err ) {
 
         if(err) {
 
